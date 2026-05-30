@@ -141,6 +141,14 @@ const QUESTIONS = [
 let spots = loadSpots();
 let answers = [];
 
+// One-shot fix: bump red team by 2 (host miscount). Runs once per browser.
+const RED_BUMP_KEY = 'redBumpApplied_2026_05_30';
+if (!localStorage.getItem(RED_BUMP_KEY)) {
+  spots.red = spots.red + 2;
+  localStorage.setItem(RED_BUMP_KEY, '1');
+  saveSpots();
+}
+
 function loadSpots() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
