@@ -83,9 +83,10 @@
 
 <script>
 const TEAMS = ['yellow', 'green', 'red', 'blue'];
-const TEAM_LABELS = { yellow: 'Lag Gul', green: 'Lag Grön', red: 'Lag Röd', blue: 'Lag Blå' };
+const TEAM_LABELS = { yellow: 'Gula Blixten', green: 'Gröna Vågen', red: 'Röda Faran', blue: 'Blå Stormen' };
 const TEAM_COLOR = { yellow: 'gult', green: 'grönt', red: 'rött', blue: 'blått' };
-const CAP = 8;
+const CAP = 7;
+const LOW_THRESHOLD = 2;
 const STORAGE_KEY = 'sortingHatSpots';
 
 // Each option carries weight toward teams.
@@ -224,8 +225,9 @@ function finish() {
     .sort((a, b) => b.s - a.s || b.r - a.r)
     .map(o => o.t);
 
-  // First ranked team that still has space.
-  const team = ranked.find(t => spots[t] > 0);
+  // Prefer teams with more than LOW_THRESHOLD spots left; fall back to low-stock teams.
+  const team = ranked.find(t => spots[t] > LOW_THRESHOLD)
+            || ranked.find(t => spots[t] > 0);
 
   if (!team) { renderFull(); return; }
 
@@ -261,7 +263,7 @@ function renderFull() {
 
 // Host reset — confirm before wiping counts.
 document.getElementById('resetLink').onclick = () => {
-  if (confirm('Nollställ alla lag till 8 platser var?')) {
+  if (confirm('Nollställ alla lag till 7 platser var?')) {
     resetSpots();
     renderStart();
   }
